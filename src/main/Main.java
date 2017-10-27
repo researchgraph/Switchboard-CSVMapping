@@ -67,10 +67,6 @@ public class Main {
 			main.deleteDirectory(cleanedCsvDirPath);
 			System.out.println("Finished.");
 		}
-		
-		if(source == Source.NIH){
-				main.mergeFiles(csvDirPath, outputFilePath, importSource, type);
-		}
 	}
 	
 	/*
