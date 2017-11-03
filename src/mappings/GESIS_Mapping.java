@@ -416,7 +416,7 @@ public class GESIS_Mapping extends Mapping{
 		case citedData: label = "dataset"; break;
 		case dataset: label = "dataset"; break;
 		case institution: label = "institution"; break;
-		case instrument: label = "gesis_institution"; break;
+		case instrument: label = "axillary"; break;
 		case project: label = "grant"; break;
 		case publication: label = "publication"; break;
 		case entityLink: label = "relatedTo";

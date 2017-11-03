@@ -63,7 +63,7 @@ public class Main {
 			
 		if(source == Source.GESIS){
 			System.out.println("Cleanup...");
-//			main.deleteDirectory(csvDirPath);
+//			main.deleteDirectory(csvDirPath);$$$$
 			main.deleteDirectory(cleanedCsvDirPath);
 			System.out.println("Finished.");
 		}
@@ -77,7 +77,7 @@ public class Main {
 	 */
 	public static void main(String[] args){
 		if(args != null && args.length == 4){
-			startProcess(args[0], args[1], args[3], args[4]);
+			startProcess(args[0], args[1], args[2], args[3]);
 		}
 	}
 }
