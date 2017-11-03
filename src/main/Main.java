@@ -53,11 +53,14 @@ public class Main {
 			System.out.println("Preparing data for import...");
 			main.cleanData(csvDirPath, cleanedCsvDirPath);
 			System.out.println("Done.");
+			
+
+			csvDirPath = cleanedCsvDirPath;
 		}		
 			
 	
 		System.out.println("Create node csv-file for import...");
-		main.mergeFiles(cleanedCsvDirPath, outputFilePath, importSource, type);
+		main.mergeFiles(csvDirPath, outputFilePath, importSource, type);
 		System.out.println("Done.");
 	
 			
@@ -75,7 +78,7 @@ public class Main {
 	 * args[2] = import source ("GESIS" or "NIH")
 	 * args[3] = import type ("NODES" or "EDGES")
 	 */
-	public static void main(String[] args){
+	public static void main(String[] args){	
 		if(args != null && args.length == 4){
 			startProcess(args[0], args[1], args[2], args[3]);
 		}

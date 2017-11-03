@@ -157,12 +157,5 @@ public class Merge {
 		
 		
 		return Tools.getArrayAsString(orderedElements, csvSeparator);
-	}		
-	
-	public static void main(String[] args){
-		String cleanedCsvDirPath = "C:/Users/du/Projekte/LOD_Research_Graph/json2csv/link_db_Entity_cleaned";
-		String outputFilePath = "C:/Users/du/Projekte/LOD_Research_Graph/test/testMerge.csv";
-		Merge merge = new Merge("GESIS", Type.NODES);
-		merge.mergeCsvFiles(cleanedCsvDirPath, outputFilePath);
-	}
+	}	
 }
