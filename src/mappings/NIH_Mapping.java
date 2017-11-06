@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.TreeSet;
 
 import csv.Merge.Type;
+import mappings.GESIS_Mapping.EntityTypes;
 
 public class NIH_Mapping extends Mapping{
 	
@@ -60,6 +61,10 @@ public class NIH_Mapping extends Mapping{
 	}
 	
 	public String getCurrentEntityType(String[] columnNames, ArrayList<String> rowElements){
+		if(columnNames.length == 2){
+			if(columnNames[0].equals("PMID") || columnNames[0].equals("PROJECT_NUMBER"))
+				return EntityTypes.entityLink.toString();
+		}
 		for(String columnName: columnNames){
 			if(columnName.equals("CORE_PROJECT_NUM"))
 				return EntityTypes.project.toString();
@@ -189,6 +194,10 @@ public class NIH_Mapping extends Mapping{
 	
 //	### NIH mapping ###
 	public String doHeaderColumnNameMapping(String header, String entityType){
+		if(entityType.equals(EntityTypes.entityLink.toString())){
+			return doRelationshipHeaderColumnNameMapping(header);
+		}
+		
 		header = header.replace("AUTHOR_LIST", "author_list");
 		header = header.replace("ISSN", "nih_issn");
 		header = header.replace("PMID", "local_id");

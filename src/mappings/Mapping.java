@@ -11,9 +11,6 @@ public abstract class Mapping {
 	public HashMap<String, HashMap<String, Integer>> columnIndexMap;
 	public HashMap<String, String> headerMap;
 	
-	public HashMap<String, Integer> relColumnIndexMap;
-	public String relationshipHeader;
-	
 	protected String csvSeparator;
 	protected String currentDateAndTime;
 	protected String localIDFieldName;

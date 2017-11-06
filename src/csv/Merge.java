@@ -14,6 +14,7 @@ import org.apache.commons.io.FileUtils;
 import mappings.GESIS_Mapping;
 import mappings.Mapping;
 import mappings.MappingFactory;
+import mappings.NIH_Mapping.EntityTypes;
 import tools.Tools;
 
 public class Merge {
@@ -89,7 +90,7 @@ public class Merge {
 						this.currentEntityType = GESIS_Mapping.EntityTypes.entityLink.toString();
 //						add header if it's the first iteration
 						if(entityTypes.add(this.currentEntityType))
-							FileUtils.writeStringToFile(outFile, this.mapping.relationshipHeader + "\n", "UTF-8");
+							FileUtils.writeStringToFile(outFile, this.mapping.headerMap.get(this.currentEntityType)  + "\n", "UTF-8");
 					}
 					
 					for(String row: rows){
@@ -100,8 +101,7 @@ public class Merge {
 							
 	//						add header if it's the first occurrence of the current entityType
 							if(entityTypes.add(this.currentEntityType))
-								FileUtils.writeStringToFile(outFile, this.mapping.headerMap.get(this.currentEntityType) + ",:LABEL" + "\n", "UTF-8");							
-								
+								FileUtils.writeStringToFile(outFile, this.mapping.headerMap.get(this.currentEntityType) + ",:LABEL" + "\n", "UTF-8");
 						}
 						else if(this.mode == Type.EDGES){
 							orderedRowContent = getOrderedRow(row, fileColumns) + "\n";							
@@ -126,13 +126,10 @@ public class Merge {
 		ArrayList<String> rowElements = cleaner.getElements(unorderedRow);	
 		HashMap<String, Integer> columnsWithIndexes;
 		
-		if(this.mode == Type.NODES){
-			this.currentEntityType = this.mapping.getCurrentEntityType(fileHeader, rowElements);
-			columnsWithIndexes = this.mapping.columnIndexMap.get(this.currentEntityType);
-		}
-		else{
-			columnsWithIndexes = this.mapping.relColumnIndexMap;
-		}
+		this.currentEntityType = this.mapping.getCurrentEntityType(fileHeader, rowElements);		
+		columnsWithIndexes = this.mapping.columnIndexMap.get(this.currentEntityType);
+		
+				
 		String[] orderedElements = Tools.getInitializedStringArray(columnsWithIndexes.size());
 		Integer columnIndex;
 		String local_id = "";

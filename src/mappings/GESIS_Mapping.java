@@ -62,6 +62,8 @@ public class GESIS_Mapping extends Mapping{
 		for(int i = 0; i < columnNames.length; i++){
 			if(columnNames[i].equals("_source.entityType"))
 				return rowElements.get(i).trim();
+			if(columnNames[i].equals("_type") && rowElements.get(i).equals("EntityLink"))
+				return EntityTypes.entityLink.toString();
 		}
 		
 		return null;
@@ -300,8 +302,12 @@ public class GESIS_Mapping extends Mapping{
 	
 //	### mapping ###
 	public String doHeaderColumnNameMapping(String header, String entityType){
+		if(entityType.equals(EntityTypes.entityLink.toString())){
+			return doRelationshipHeaderColumnNameMapping(header);
+		}
+		
 		header = header.replace("_source.", "");
-//		header = header.replace("_id", "");
+		header = header.replace("_id", "");
 		header = header.replace("_index", "gesis_index");
 //		header = header.replace("_score", "");
 //		header = header.replace("abstractText", "");
