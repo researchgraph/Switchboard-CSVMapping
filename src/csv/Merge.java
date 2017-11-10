@@ -75,6 +75,7 @@ public class Merge {
 		}
 		
 		for(File inFile: files){
+			System.out.println("File: " + inFile.getName());
 			try {
 				content = FileUtils.readFileToString(inFile, "UTF-8");
 				
@@ -121,6 +122,10 @@ public class Merge {
 		
 	}		
 	
+	private String removeQuotes(String text){		
+		return text.replace("\"", "");
+	}
+	
 	private String getOrderedRow(String unorderedRow, String[] fileHeader){
 		CSVCleaner cleaner = new CSVCleaner();		
 		ArrayList<String> rowElements = cleaner.getElements(unorderedRow);	
@@ -137,13 +142,21 @@ public class Merge {
 		for(int i = 0; i < fileHeader.length; i++){
 			columnIndex = columnsWithIndexes.get(fileHeader[i].trim());
 			if(columnIndex != null && columnIndex >= 0){
+				if(columnIndex >= orderedElements.length)
+				if(i >= rowElements.size()){
+				}
 				orderedElements[columnIndex] = rowElements.get(i).trim();
 				
 				if(orderedElements[columnIndex].equals("null"))
 					orderedElements[columnIndex] = "\"\"";
 				
-				if(fileHeader[i].contains(this.mapping.getLocalIDFieldName(this.currentEntityType)))
+				if(fileHeader[i].contains(this.mapping.getLocalIDFieldName(this.currentEntityType))){
+					orderedElements[columnIndex] = removeQuotes(orderedElements[columnIndex]);
 					local_id = orderedElements[columnIndex];
+				}
+				
+				if(this.mode == Type.EDGES)
+					orderedElements[columnIndex] = removeQuotes(orderedElements[columnIndex]);
 			}
 		}
 		

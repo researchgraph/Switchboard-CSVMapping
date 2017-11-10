@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.TreeSet;
 
 import csv.Merge.Type;
-import mappings.GESIS_Mapping.EntityTypes;
 
 public class NIH_Mapping extends Mapping{
 	

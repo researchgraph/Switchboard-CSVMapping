@@ -19,6 +19,7 @@ public class CSVCleaner {
 		File[] files = csvDir.listFiles();		
 		
 		for(File file: files){
+			System.out.println("File: " + file.getName());
 			cleanCsvFile(file, new File(outpath + file.getName()));
 		}		
 	}
@@ -29,39 +30,63 @@ public class CSVCleaner {
 			content = FileUtils.readFileToString(inFile, "UTF-8");
 			
 			header = content.substring(0,  content.indexOf("\n"));
+			FileUtils.writeStringToFile(outFile, header, "UTF-8");
+			
 			numColumns = header.split(csvSeperator).length;
 			content = content.substring(content.indexOf("\n") +1);
 			
 			String[] lines = content.split("\n");
-			content = "";
-			for(String line: lines){
-				content += cleanLine(line) + "\n";
-			}
+			cleanLines(lines, outFile);
 			
-			FileUtils.writeStringToFile(outFile, header + "\n" + content, "UTF-8");
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
+	public void cleanLines(String[] lines, File outFile) throws IOException{
+		String content = "";
+		for(int i = 0; i < lines.length; i++){
+			String line = lines[i];
+			ArrayList<String> elements = getElements(line);
+			
+			String currentLine = line;		
+			while(elements.size() < this.numColumns && i < lines.length - 1){
+				currentLine += " " + lines[++i];
+				elements = getElements(currentLine);
+			}
+			content = cleanLine(elements);
+			FileUtils.writeStringToFile(outFile, "\n" + content, "UTF-8", true);
+		}
+	}
+	
 	public String cleanLine(String line){
 		ArrayList<String> elements = getElements(line);
+		return cleanLine(elements);
+	}
+	
+	public String cleanLine(ArrayList<String> elements){		
 		try {
 			if(elements.size() != this.numColumns)
 				throw new Exception();
 		} catch (Exception e) {
-			System.out.println("Illegal number of columns:" + numColumns + "->" + elements.size() + "\n" + line);
+			System.out.println("Illegal number of columns:" + numColumns + "->" + elements.size());
 			e.printStackTrace();
+			for(String element: elements){
+				System.out.println(element);
+			}
 		}		
 		
-		line = "";
+		String line = "";
+		String cleanElement;
 		for(String element: elements){
-			line += cleanElement(element) + csvSeperator;
+			cleanElement = cleanElement(element);
+			line += csvSeperator + cleanElement;
 		}
 		
 //		line = listToLine(elements);		
 		
-		return line.substring(0, line.lastIndexOf(csvSeperator));
+		return line.substring(1);
 	}
 	
 	public void setCsvSeparator(String csvSeparator){
@@ -85,33 +110,100 @@ public class CSVCleaner {
 		return element;		
 	}
 	
+	private void mergeQuotes(ArrayList<String> elements, String lastQuote){
+		String tmp = "";
+		String element;
+		for(int i = elements.size()-1; i >= 0; i--){
+			element = elements.get(i);
+//			merge with last element that ends with quotes
+			if(element.endsWith("\"") && endsWithUnevenQuotes(element)){
+				element = element.substring(0, element.length()-1);
+//				add elements between lastQuote and last element that ends with quotes
+				if(!tmp.isEmpty())
+					element += csvSeperator + tmp;
+				element += csvSeperator + lastQuote;
+				elements.set(i, element);		
+//				remove remainder (tmp)
+				while(elements.size() > i + 1){
+					elements.remove(elements.size()-1);
+				}
+				break;
+			}
+			else{
+				tmp = element + csvSeperator + tmp;
+			}				
+		}		
+	}
+	
+	private boolean endsWithUnevenQuotes(String text){
+		int numTrailingQuotes = 0;
+		boolean lastCharacterIsQuote = true;
+		char quote = '"';
+		for(int i = text.length()-1; i >= 0 && lastCharacterIsQuote; i--){
+			if(text.charAt(i) == quote){
+				numTrailingQuotes++;				
+			}
+			else{
+				lastCharacterIsQuote = false;
+			}
+		}
+//		if the last character is a quote, text only contained quotes
+		if(lastCharacterIsQuote)
+			return true;
+		
+		return (numTrailingQuotes % 2 != 0);
+	}
+	
+	private boolean elementWithQuotesIsComplete(String text){
+		text = text.replaceAll("[^\"]*", "");
+		return (text.length() % 2 == 0);
+	}
+	
 	
 	public ArrayList<String> getElements(String line){
 		ArrayList<String> elements = new ArrayList<>();
 		
 		String[] separation = line.split(csvSeperator, 100000);
 		String prefix = "";
+		String tmp;
 		for(String element: separation){	
 			element = element.trim();
 			if(prefix.isEmpty()){
 				if(element.startsWith("\"")){
-					if(element.endsWith("\"") && element.length() > 1)
+					if(element.endsWith("\"") && element.length() > 1 && endsWithUnevenQuotes(element))
 						elements.add(element);
 					else
 						prefix = element;
+				}
+				else if(element.endsWith("\"") && !element.startsWith("\"") && endsWithUnevenQuotes(element)){
+					mergeQuotes(elements, element);
 				}
 				else
 					elements.add(element);
 			}
 			else{
-				if(element.endsWith("\"")){
-					elements.add(prefix + csvSeperator + element);
-					prefix = "";
+				if(element.endsWith("\"") && endsWithUnevenQuotes(element)){
+					tmp = prefix + csvSeperator + element;
+					if(elementWithQuotesIsComplete(tmp)){
+						elements.add(prefix + csvSeperator + element);
+						prefix = "";
+					}
+					else{
+						prefix += csvSeperator + element;
+					}
 				}	
 				else
 					prefix += csvSeperator + element;
 			}
 		}
+		
+		if(!prefix.isEmpty())
+			elements.add(prefix);
+//		if line ends with csvSeperator, the resulting String array of the split-function doesn't contain the last row 
+		if(line.endsWith(csvSeperator)){
+			elements.add("");			
+		}
+		
 		return elements;
 	}
 }
