@@ -96,15 +96,17 @@ public class CSVCleaner {
 	private String cleanElement(String element){
 		
 		if(element.contains("\"")){
-			boolean addQuotes = false;
-			
-			if(element.startsWith("\"") && element.endsWith("\""))
-				addQuotes = true;			
+//			boolean addQuotes = false;
+//			
+//			if(element.startsWith("\"") && element.endsWith("\""))
+//				addQuotes = true;			
 			
 			element = element.replace("\"", "");
 			
-			if(addQuotes)
-				element = "\"" + element + "\"";				
+//			if(addQuotes)
+//				element = "\"" + element + "\"";
+			
+			element = "\"" + element + "\"";
 		}		
 		
 		return element;		
@@ -113,26 +115,58 @@ public class CSVCleaner {
 	private void mergeQuotes(ArrayList<String> elements, String lastQuote){
 		String tmp = "";
 		String element;
+		boolean lastQuoteAdded = false;
+		
 		for(int i = elements.size()-1; i >= 0; i--){
 			element = elements.get(i);
 //			merge with last element that ends with quotes
 			if(element.endsWith("\"") && endsWithUnevenQuotes(element)){
-				element = element.substring(0, element.length()-1);
-//				add elements between lastQuote and last element that ends with quotes
-				if(!tmp.isEmpty())
-					element += csvSeperator + tmp;
-				element += csvSeperator + lastQuote;
-				elements.set(i, element);		
-//				remove remainder (tmp)
-				while(elements.size() > i + 1){
-					elements.remove(elements.size()-1);
+//				ending quote is inconsistency
+				if(consistentQuotes(element)){
+					elements.add(lastQuote);
+					lastQuoteAdded = true;
 				}
+				else{
+					element = element.substring(0, element.length()-1);
+//					add elements between lastQuote and last element that ends with quotes
+					if(!tmp.isEmpty())
+						element += csvSeperator + tmp;
+					element += csvSeperator + lastQuote;
+					elements.set(i, element);	
+					
+//					remove remainder (tmp)
+					while(elements.size() > i + 1){
+						elements.remove(elements.size()-1);
+					}
+				}
+				lastQuoteAdded = true;
+				break;
+			}
+//			ending quote is inconsistency
+			else if(element.isEmpty()){
+				elements.add(lastQuote);
+				lastQuoteAdded = true;
 				break;
 			}
 			else{
 				tmp = element + csvSeperator + tmp;
 			}				
-		}		
+		}
+		
+		if(!lastQuoteAdded)
+			elements.add(lastQuote);
+	}
+	
+	private boolean consistentQuotes(String text){
+		char quote = '"';
+		int numQuotes = 0;
+		
+		for(int i = 0; i < text.length(); i++){
+			if(text.charAt(i) == quote)
+				numQuotes++;
+		}
+		
+		return (numQuotes % 2 == 0);
 	}
 	
 	private boolean endsWithUnevenQuotes(String text){
@@ -160,8 +194,10 @@ public class CSVCleaner {
 	}
 	
 	
+	
 	public ArrayList<String> getElements(String line){
 		ArrayList<String> elements = new ArrayList<>();
+		line = line.trim();
 		
 		String[] separation = line.split(csvSeperator, 100000);
 		String prefix = "";
@@ -199,10 +235,6 @@ public class CSVCleaner {
 		
 		if(!prefix.isEmpty())
 			elements.add(prefix);
-//		if line ends with csvSeperator, the resulting String array of the split-function doesn't contain the last row 
-		if(line.endsWith(csvSeperator)){
-			elements.add("");			
-		}
 		
 		return elements;
 	}

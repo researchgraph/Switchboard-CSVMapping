@@ -178,6 +178,7 @@ public class NIH_Mapping extends Mapping{
 		TreeSet<String> columns = new TreeSet<>();
 		columns.add("PMID");
 		columns.add("PROJECT_NUMBER");
+		columns.add(":TYPE");
 		
 		return columns;	
 	}
@@ -199,7 +200,7 @@ public class NIH_Mapping extends Mapping{
 		
 		header = header.replace("AUTHOR_LIST", "author_list");
 		header = header.replace("ISSN", "nih_issn");
-		header = header.replace("PMID", "local_id");
+		header = header.replace("PMID", "local_id:ID");
 		header = header.replace("PUB_TITLE", "title");
 		header = header.replace("PUB_YEAR", "publication_year");	
 			
@@ -212,7 +213,7 @@ public class NIH_Mapping extends Mapping{
 		header = header.replace("BUDGET_START", "nih_budget_start");
 		header = header.replace("BUDGET_END", "nih_budget_end");
 		header = header.replace("CFDA_CODE", "nih_cfda_code");
-		header = header.replace("CORE_PROJECT_NUM", "local_id");
+		header = header.replace("CORE_PROJECT_NUM", "local_id:ID");
 		header = header.replace("ED_INST_TYPE", "nih_ed_inst_type");
 		header = header.replace("FOA_NUMBER", "nih_foa_number");
 		header = header.replace("FULL_PROJECT_NUM", "nih_full_project_num");
@@ -251,8 +252,8 @@ public class NIH_Mapping extends Mapping{
 		header = header.replace("INDIRECT_COST_AMT", "nih_indirect_cost_amt");	
 		
 
-		header = header.replace("Core Project Number", "nih_core_project_number");
-		header = header.replace("ClinicalTrials.gov ID", "local_id");
+		header = header.replace("Core Project Number", "local_id:ID");
+		header = header.replace("ClinicalTrials.gov ID", "nih_clinical_trials_gov_id");
 		header = header.replace("Study", "title");
 		header = header.replace("Study Status", "nih_study_status");
 		

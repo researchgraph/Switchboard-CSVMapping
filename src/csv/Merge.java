@@ -155,8 +155,10 @@ public class Merge {
 					local_id = orderedElements[columnIndex];
 				}
 				
-				if(this.mode == Type.EDGES)
-					orderedElements[columnIndex] = removeQuotes(orderedElements[columnIndex]);
+				if(this.mode == Type.EDGES){
+					if(fileHeader[i].contains(":START_ID") || fileHeader[i].contains(":END_ID"))
+						orderedElements[columnIndex] = removeQuotes(orderedElements[columnIndex]);
+				}
 			}
 		}
 		
