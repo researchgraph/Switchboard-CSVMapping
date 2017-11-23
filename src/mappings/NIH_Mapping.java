@@ -16,10 +16,11 @@ public class NIH_Mapping extends Mapping{
 		project,
 		publication,
 		clinicalStudy,
-		prjPubLink;
+		prjPubLink,
+		prjCSLink;
 	}	
 	
-	protected String[] getNodeEntitiesNames(){
+	public String[] getNodeEntitiesNames(){
 		return new String[]{
 				EntityTypes.project.toString(),
 				EntityTypes.publication.toString(),
@@ -27,9 +28,10 @@ public class NIH_Mapping extends Mapping{
 		};		
 	}
 	
-	protected String[] getEdgeEntitiesNames(){
+	public String[] getEdgeEntitiesNames(){
 		return new String[]{
-				EntityTypes.prjPubLink.toString()
+				EntityTypes.prjPubLink.toString(),
+				EntityTypes.prjCSLink.toString()
 		};		
 	}
 	
@@ -41,6 +43,7 @@ public class NIH_Mapping extends Mapping{
 		case publication: return getPublicationColumns();
 		case clinicalStudy: return getClinicalStudiesColumns();
 		case prjPubLink: return getLinkTables();
+		case prjCSLink: return getClinicalStudyRelationshipColumns();
 		}
 		
 		return null;
@@ -54,6 +57,7 @@ public class NIH_Mapping extends Mapping{
 		case clinicalStudy: return "ClinicalTrials.gov ID";
 		case publication: return "PMID";
 		case prjPubLink: return "";
+		case prjCSLink: return "";
 		}
 		
 		return localIDFieldName;
@@ -63,6 +67,8 @@ public class NIH_Mapping extends Mapping{
 		if(columnNames.length == 2){
 			if(columnNames[0].equals("PMID") || columnNames[0].equals("PROJECT_NUMBER"))
 				return EntityTypes.prjPubLink.toString();
+			if(columnNames[0].equals("Core Project Number") || columnNames[0].equals("ClinicalTrials.gov ID"))
+				return EntityTypes.prjCSLink.toString();
 		}
 		for(String columnName: columnNames){
 			if(columnName.equals("CORE_PROJECT_NUM"))
@@ -203,7 +209,7 @@ public class NIH_Mapping extends Mapping{
 	
 //	### NIH mapping ###
 	public String doHeaderColumnNameMapping(String header, String entityType){
-		if(entityType.equals(EntityTypes.prjPubLink.toString())){
+		if(entityType.equals(EntityTypes.prjPubLink.toString()) || entityType.equals(EntityTypes.prjCSLink.toString())){
 			return doRelationshipHeaderColumnNameMapping(header);
 		}
 		
@@ -320,6 +326,7 @@ public class NIH_Mapping extends Mapping{
 		case publication: label = "publication"; break;
 		case clinicalStudy: label = "dataset"; break;
 		case prjPubLink: label = "relatedTo";
+		case prjCSLink: label = "relatedTo";
 		}		
 		
 		return label;

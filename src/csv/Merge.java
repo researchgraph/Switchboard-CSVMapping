@@ -77,7 +77,9 @@ public class Merge {
 			outFile = new File(csvOutputPath);
 		}
 		
+		int i = 0;
 		for(File inFile: files){
+			i++;
 			System.out.println("File: " + inFile.getName());
 			try {
 				content = FileUtils.readFileToString(inFile, "UTF-8");
@@ -90,11 +92,10 @@ public class Merge {
 				rows = content.split("\n");
 				
 				try {					
-					if(this.mode == Type.EDGES){						
-						this.currentEntityType = GESIS_Mapping.EntityTypes.entityLink.toString();
+					if(this.mode == Type.EDGES){									
 //						add header if it's the first iteration
-						if(entityTypes.add(this.currentEntityType))
-							FileUtils.writeStringToFile(outFile, this.mapping.headerMap.get(this.currentEntityType)  + "\n", "UTF-8");
+						if(i == 1)
+							FileUtils.writeStringToFile(outFile, this.mapping.headerMap.get(mapping.getEdgeEntitiesNames()[0])  + "\n", "UTF-8");
 					}
 					
 					for(String row: rows){

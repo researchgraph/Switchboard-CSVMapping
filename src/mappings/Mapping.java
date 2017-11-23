@@ -39,8 +39,8 @@ public abstract class Mapping {
 		this.localIDFieldName = name;
 	}
 	
-	protected abstract String[] getNodeEntitiesNames();
-	protected abstract String[] getEdgeEntitiesNames();
+	public abstract String[] getNodeEntitiesNames();
+	public abstract String[] getEdgeEntitiesNames();
 	protected abstract TreeSet<String> getEntityColumns(String entityName);
 	
 	protected void setColumnsIndicesAndHeaders(){

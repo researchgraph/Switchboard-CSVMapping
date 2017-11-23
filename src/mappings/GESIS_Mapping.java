@@ -25,7 +25,7 @@ public class GESIS_Mapping extends Mapping{
 		entityLink;
 	}	
 	
-	protected String[] getNodeEntitiesNames(){
+	public String[] getNodeEntitiesNames(){
 		return new String[]{
 				EntityTypes.citedData.toString(),
 				EntityTypes.dataset.toString(),
@@ -36,7 +36,7 @@ public class GESIS_Mapping extends Mapping{
 		};		
 	}
 	
-	protected String[] getEdgeEntitiesNames(){
+	public String[] getEdgeEntitiesNames(){
 		return new String[]{
 				EntityTypes.entityLink.toString()
 		};		

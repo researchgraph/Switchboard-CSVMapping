@@ -78,6 +78,9 @@ public class Main {
 	 * args[3] = import type ("NODES" or "EDGES")
 	 */
 	public static void main(String[] args){
+		String d = "C:/Users/du/Projekte/LOD_Research_Graph/nih/importData/relTest";
+		String o = "C:/Users/du/Projekte/LOD_Research_Graph/nih/importData/relTest.csv";
+		startProcess(d, o, "NIH", "EDGES");
 		if(args != null && args.length == 4){
 			double startTime = System.currentTimeMillis();
 			startProcess(args[0], args[1], args[2], args[3]);
