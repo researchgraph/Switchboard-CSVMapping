@@ -79,7 +79,10 @@ public class Main {
 	 */
 	public static void main(String[] args){
 		if(args != null && args.length == 4){
+			double startTime = System.currentTimeMillis();
 			startProcess(args[0], args[1], args[2], args[3]);
+			double endTime = System.currentTimeMillis();
+			System.out.println("Runtime: " + (endTime - startTime)/(1000*60) + " minutes");
 		}
 	}
 }

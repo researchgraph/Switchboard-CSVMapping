@@ -16,7 +16,7 @@ public class NIH_Mapping extends Mapping{
 		project,
 		publication,
 		clinicalStudy,
-		entityLink;
+		prjPubLink;
 	}	
 	
 	protected String[] getNodeEntitiesNames(){
@@ -29,7 +29,7 @@ public class NIH_Mapping extends Mapping{
 	
 	protected String[] getEdgeEntitiesNames(){
 		return new String[]{
-				EntityTypes.entityLink.toString()
+				EntityTypes.prjPubLink.toString()
 		};		
 	}
 	
@@ -40,7 +40,7 @@ public class NIH_Mapping extends Mapping{
 		case project: return getProjectColumns();
 		case publication: return getPublicationColumns();
 		case clinicalStudy: return getClinicalStudiesColumns();
-		case entityLink: return getLinkTables();
+		case prjPubLink: return getLinkTables();
 		}
 		
 		return null;
@@ -53,7 +53,7 @@ public class NIH_Mapping extends Mapping{
 		case project: return "CORE_PROJECT_NUM";
 		case clinicalStudy: return "ClinicalTrials.gov ID";
 		case publication: return "PMID";
-		case entityLink: return "";
+		case prjPubLink: return "";
 		}
 		
 		return localIDFieldName;
@@ -62,7 +62,7 @@ public class NIH_Mapping extends Mapping{
 	public String getCurrentEntityType(String[] columnNames, ArrayList<String> rowElements){
 		if(columnNames.length == 2){
 			if(columnNames[0].equals("PMID") || columnNames[0].equals("PROJECT_NUMBER"))
-				return EntityTypes.entityLink.toString();
+				return EntityTypes.prjPubLink.toString();
 		}
 		for(String columnName: columnNames){
 			if(columnName.equals("CORE_PROJECT_NUM"))
@@ -81,16 +81,16 @@ public class NIH_Mapping extends Mapping{
 	
 	private TreeSet<String> getPublicationColumns(){
 		TreeSet<String> columns = new TreeSet<>();
-		columns.add("AFFILIATION");
+//		columns.add("AFFILIATION");
 		columns.add("AUTHOR_LIST");
-		columns.add("COUNTRY");
+//		columns.add("COUNTRY");
 		columns.add("ISSN");
-		columns.add("JOURNAL_ISSUE");
-		columns.add("JOURNAL_TITLE");
-		columns.add("JOURNAL_TITLE_ABBR");
-		columns.add("JOURNAL_VOLUME");
+//		columns.add("JOURNAL_ISSUE");
+//		columns.add("JOURNAL_TITLE");
+//		columns.add("JOURNAL_TITLE_ABBR");
+//		columns.add("JOURNAL_VOLUME");
 		columns.add("LANG");
-		columns.add("PAGE_NUMBER");
+//		columns.add("PAGE_NUMBER");
 		columns.add("PMC_ID");
 		columns.add("PMID");
 		columns.add("PUB_DATE");
@@ -106,50 +106,50 @@ public class NIH_Mapping extends Mapping{
 	
 	private TreeSet<String> getProjectColumns(){
 		TreeSet<String> columns = new TreeSet<>();
-		columns.add("APPLICATION_ID");
-		columns.add("ACTIVITY");
-		columns.add("ADMINISTERING_IC");
-		columns.add("APPLICATION_TYPE");
-		columns.add("ARRA_FUNDED");
-		columns.add("AWARD_NOTICE_DATE");
+//		columns.add("APPLICATION_ID");
+//		columns.add("ACTIVITY");
+//		columns.add("ADMINISTERING_IC");
+//		columns.add("APPLICATION_TYPE");
+//		columns.add("ARRA_FUNDED");
+//		columns.add("AWARD_NOTICE_DATE");
 		columns.add("BUDGET_START");
 		columns.add("BUDGET_END");
-		columns.add("CFDA_CODE");
+//		columns.add("CFDA_CODE");
 		columns.add("CORE_PROJECT_NUM");
-		columns.add("ED_INST_TYPE");
-		columns.add("FOA_NUMBER");
+//		columns.add("ED_INST_TYPE");
+//		columns.add("FOA_NUMBER");
 		columns.add("FULL_PROJECT_NUM");
-		columns.add("SUBPROJECT_ID");
-		columns.add("FUNDING_ICs");
-		columns.add("FY");
-		columns.add("IC_NAME");
+//		columns.add("SUBPROJECT_ID");
+//		columns.add("FUNDING_ICs");
+//		columns.add("FY");
+//		columns.add("IC_NAME");
 		columns.add("NIH_SPENDING_CATS");
 		columns.add("ORG_CITY");
 		columns.add("ORG_COUNTRY");
-		columns.add("ORG_DEPT");
-		columns.add("ORG_DISTRICT");
-		columns.add("ORG_DUNS");
-		columns.add("ORG_FIPS");
+//		columns.add("ORG_DEPT");
+//		columns.add("ORG_DISTRICT");
+//		columns.add("ORG_DUNS");
+//		columns.add("ORG_FIPS");
 		columns.add("ORG_NAME");
-		columns.add("ORG_STATE");
-		columns.add("ORG_ZIPCODE");
-		columns.add("PHR");
+//		columns.add("ORG_STATE");
+//		columns.add("ORG_ZIPCODE");
+//		columns.add("PHR");
 		columns.add("PI_IDS");
 		columns.add("PI_NAMEs");
 		columns.add("PROGRAM_OFFICER_NAME");
 		columns.add("PROJECT_START");
 		columns.add("PROJECT_END");
-		columns.add("PROJECT_TERMS");
+//		columns.add("PROJECT_TERMS");
 		columns.add("PROJECT_TITLE");
 		columns.add("SERIAL_NUMBER");
-		columns.add("STUDY_SECTION");
-		columns.add("STUDY_SECTION_NAME");
-		columns.add("SUFFIX");
+//		columns.add("STUDY_SECTION");
+//		columns.add("STUDY_SECTION_NAME");
+//		columns.add("SUFFIX");
 		columns.add("SUPPORT_YEAR");
 		columns.add("TOTAL_COST");
 		columns.add("TOTAL_COST_SUB_PROJECT");
 		columns.add("FUNDING_MECHANISM");
-		columns.add("SUBPROJECT_ID");
+//		columns.add("SUBPROJECT_ID");
 		columns.add("DIRECT_COST_AMT");
 		columns.add("INDIRECT_COST_AMT");	
 
@@ -162,7 +162,7 @@ public class NIH_Mapping extends Mapping{
 	
 	private TreeSet<String> getClinicalStudiesColumns(){
 		TreeSet<String> columns = new TreeSet<>();
-		columns.add("Core Project Number");
+//		columns.add("Core Project Number");
 		columns.add("ClinicalTrials.gov ID");
 		columns.add("Study");
 		columns.add("Study Status");
@@ -183,6 +183,15 @@ public class NIH_Mapping extends Mapping{
 		return columns;	
 	}
 	
+	private TreeSet<String> getClinicalStudyRelationshipColumns(){
+		TreeSet<String> columns = new TreeSet<>();
+		columns.add("Core Project Number");
+		columns.add("ClinicalTrials.gov ID");
+		columns.add(":TYPE");
+		
+		return columns;	
+	}
+	
 	private void addResearchGraphSchema(TreeSet<String> columnList){
 //		Research Graph schema
 		columnList.add("key");		
@@ -194,7 +203,7 @@ public class NIH_Mapping extends Mapping{
 	
 //	### NIH mapping ###
 	public String doHeaderColumnNameMapping(String header, String entityType){
-		if(entityType.equals(EntityTypes.entityLink.toString())){
+		if(entityType.equals(EntityTypes.prjPubLink.toString())){
 			return doRelationshipHeaderColumnNameMapping(header);
 		}
 		
@@ -221,6 +230,7 @@ public class NIH_Mapping extends Mapping{
 		header = header.replace("FUNDING_ICs", "nih_funding_ics");
 		header = header.replace("FY", "nih_fy");
 		header = header.replace("IC_NAME", "nih_ic_name");
+		header = header.replace("LANG", "nih_lang");
 		header = header.replace("NIH_SPENDING_CATS", "nih_spending_cats");
 		header = header.replace("ORG_CITY", "nih_org_city");
 		header = header.replace("ORG_COUNTRY", "nih_org_country");
@@ -234,28 +244,29 @@ public class NIH_Mapping extends Mapping{
 		header = header.replace("PHR", "nih_phr");
 		header = header.replace("PI_IDS", "nih_pi_ids");
 		header = header.replace("PI_NAMEs", "participant_list");
+		header = header.replace("PMC_ID", "nih_pmc_id");
 		header = header.replace("PROGRAM_OFFICER_NAME", "nih_program_officer_name");
 		header = header.replace("PROJECT_START", "start_year");
 		header = header.replace("PROJECT_END", "end_year");
 		header = header.replace("PROJECT_TERMS", "nih_project_terms");
 		header = header.replace("PROJECT_TITLE", "title");
+		header = header.replace("PUB_DATE", "nih_pub_date");
 		header = header.replace("SERIAL_NUMBER", "nih_serial_number");
-		header = header.replace("STUDY_SECTION", "nih_study_section");
 		header = header.replace("STUDY_SECTION_NAME", "nih_study_section_name");
+		header = header.replace("STUDY_SECTION", "nih_study_section");
 		header = header.replace("SUFFIX", "nih_suffix");
 		header = header.replace("SUPPORT_YEAR", "nih_support_year");
-		header = header.replace("TOTAL_COST", "nih_total_cost");
 		header = header.replace("TOTAL_COST_SUB_PROJECT", "nih_total_cost_sub_project");
+		header = header.replace("TOTAL_COST", "nih_total_cost");
 		header = header.replace("FUNDING_MECHANISM", "nih_funding_mechanism");
-		header = header.replace("SUBPROJECT_ID", "nih_subproject_id");
-		header = header.replace("DIRECT_COST_AMT", "nih_direct_cost_amt");
-		header = header.replace("INDIRECT_COST_AMT", "nih_indirect_cost_amt");	
+		header = header.replace("INDIRECT_COST_AMT", "nih_indirect_cost_amt");
+		header = header.replace("DIRECT_COST_AMT", "nih_direct_cost_amt");	
 		
 
-		header = header.replace("Core Project Number", "local_id:ID");
-		header = header.replace("ClinicalTrials.gov ID", "nih_clinical_trials_gov_id");
-		header = header.replace("Study", "title");
+//		header = header.replace("Core Project Number", "local_id:ID");
+		header = header.replace("ClinicalTrials.gov ID", "local_id:ID");
 		header = header.replace("Study Status", "nih_study_status");
+		header = header.replace("Study", "title");
 		
 		return header;
 	}
@@ -263,6 +274,8 @@ public class NIH_Mapping extends Mapping{
 	public String doRelationshipHeaderColumnNameMapping(String header){
 		header = header.replace("PMID", ":START_ID");
 		header = header.replace("PROJECT_NUMBER", ":END_ID");
+		header = header.replace("Core Project Number", ":START_ID");
+		header = header.replace("ClinicalTrials.gov ID", ":END_ID");
 		return header;
 	}
 	
@@ -292,7 +305,7 @@ public class NIH_Mapping extends Mapping{
 	public void addRelationshipResearchGraphValues(String[] orderedElements, HashMap<String, Integer> columnsWithIndexes){
 		Integer columnIndex = columnsWithIndexes.get(":TYPE");
 		if(columnIndex != null && columnIndex >= 0)
-			orderedElements[columnIndex] = getLabel(EntityTypes.entityLink.toString());
+			orderedElements[columnIndex] = getLabel(EntityTypes.prjPubLink.toString());
 	}
 	
 //	### labels ###
@@ -306,7 +319,7 @@ public class NIH_Mapping extends Mapping{
 		case project: label = "grant"; break;
 		case publication: label = "publication"; break;
 		case clinicalStudy: label = "dataset"; break;
-		case entityLink: label = "relatedTo";
+		case prjPubLink: label = "relatedTo";
 		}		
 		
 		return label;

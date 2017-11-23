@@ -26,6 +26,8 @@ public class Merge {
 	private String currentEntityType = "";
 	
 	private Mapping mapping;
+	private HashSet<String> local_ids;
+	int num_duplicates = 0;
 	
 	public enum Type{
 		NODES, EDGES;
@@ -36,7 +38,8 @@ public class Merge {
 		setCurrentDateAndTime();
 		
 		MappingFactory factory = new MappingFactory(dataSource);		
-		mapping = factory.getMapping(csvSeparator, currentDateAndTime, mode);		
+		mapping = factory.getMapping(csvSeparator, currentDateAndTime, mode);	
+		local_ids = new HashSet<>();
 	}
 	
 	private void setCurrentDateAndTime(){
@@ -65,7 +68,7 @@ public class Merge {
 		String[] fileColumns;
 		String[] rows;
 		
-		String orderedRowContent = "";
+		String orderedRowContent = "", orderedRow = "";
 		
 		File outFile = null;
 
@@ -96,7 +99,8 @@ public class Merge {
 					
 					for(String row: rows){
 						if(this.mode == Type.NODES){
-							orderedRowContent = getOrderedRow(row, fileColumns) + "," + mapping.getLabel(this.currentEntityType) + "\n";
+							orderedRow = getOrderedRow(row, fileColumns);
+							orderedRowContent = orderedRow + "," + mapping.getLabel(this.currentEntityType) + "\n";
 							currentTypeOutputPath = csvOutputPathPrefix + "_" + currentEntityType + csvOutputPathSuffix;
 							outFile = new File(currentTypeOutputPath);
 							
@@ -105,10 +109,12 @@ public class Merge {
 								FileUtils.writeStringToFile(outFile, this.mapping.headerMap.get(this.currentEntityType) + ",:LABEL" + "\n", "UTF-8");
 						}
 						else if(this.mode == Type.EDGES){
-							orderedRowContent = getOrderedRow(row, fileColumns) + "\n";							
+							orderedRow = getOrderedRow(row, fileColumns);
+							orderedRowContent = orderedRow + "\n";							
 						}
 						
-						FileUtils.writeStringToFile(outFile, orderedRowContent, "UTF-8", true);		
+						if(orderedRow != null && !orderedRow.isEmpty())
+							FileUtils.writeStringToFile(outFile, orderedRowContent, "UTF-8", true);		
 					}				
 				} catch (IOException e1) {
 					e1.printStackTrace();
@@ -119,7 +125,9 @@ public class Merge {
 			}
 		}
 		
-		
+		if(num_duplicates > 0){
+			System.out.println(num_duplicates + " lines were skipped, because of duplicate IDs!");
+		}	
 	}		
 	
 	private String removeQuotes(String text){		
@@ -153,6 +161,12 @@ public class Merge {
 				if(fileHeader[i].contains(this.mapping.getLocalIDFieldName(this.currentEntityType))){
 					orderedElements[columnIndex] = removeQuotes(orderedElements[columnIndex]);
 					local_id = orderedElements[columnIndex];
+					
+//					don't allow duplicates
+					if(this.mode == Type.NODES && !local_ids.add(local_id)){
+						num_duplicates++;
+						return "";
+					}					
 				}
 				
 				if(this.mode == Type.EDGES){

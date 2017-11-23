@@ -102,6 +102,7 @@ public class CSVCleaner {
 //				addQuotes = true;			
 			
 			element = element.replace("\"", "");
+			element = element.replace("\\", "\\\\");
 			
 //			if(addQuotes)
 //				element = "\"" + element + "\"";
