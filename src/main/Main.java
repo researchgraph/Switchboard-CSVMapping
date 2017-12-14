@@ -43,7 +43,6 @@ public class Main {
 	private static void startProcess(String csvDirPath, String outputFilePath, String importSource, String importType){
 		Main main = new Main();
 		
-		Source source = Source.valueOf(importSource);
 		Type type = Type.valueOf(importType);
 		String cleanedCsvDirPath = "";
 		

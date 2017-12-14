@@ -12,7 +12,7 @@ public class GESIS_Mapping extends Mapping{
 	
 	public GESIS_Mapping(String csvSeparator, String currentDateAndTime, Type mode){
 		super(csvSeparator, currentDateAndTime, mode);
-		setLocalIDFieldName("gwsID");
+		setLocalIDFieldName("gwsId");
 	}
 	
 	public enum EntityTypes{		
