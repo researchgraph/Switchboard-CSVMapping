@@ -200,10 +200,10 @@ public class NIH_Mapping extends Mapping{
 	
 	private void addResearchGraphSchema(TreeSet<String> columnList){
 //		Research Graph schema
-		columnList.add("key");		
+		columnList.add("key:ID");		
 		columnList.add("source");	
 		columnList.add("last_updated");	
-		columnList.add("scopus_eid");	
+//		columnList.add("scopus_eid");	
 		columnList.add("type");
 	}
 	
@@ -215,7 +215,7 @@ public class NIH_Mapping extends Mapping{
 		
 		header = header.replace("AUTHOR_LIST", "author_list");
 		header = header.replace("ISSN", "nih_issn");
-		header = header.replace("PMID", "local_id:ID");
+		header = header.replace("PMID", "local_id");
 		header = header.replace("PUB_TITLE", "title");
 		header = header.replace("PUB_YEAR", "publication_year");	
 			
@@ -228,7 +228,7 @@ public class NIH_Mapping extends Mapping{
 		header = header.replace("BUDGET_START", "nih_budget_start");
 		header = header.replace("BUDGET_END", "nih_budget_end");
 		header = header.replace("CFDA_CODE", "nih_cfda_code");
-		header = header.replace("CORE_PROJECT_NUM", "local_id:ID");
+		header = header.replace("CORE_PROJECT_NUM", "local_id");
 		header = header.replace("ED_INST_TYPE", "nih_ed_inst_type");
 		header = header.replace("FOA_NUMBER", "nih_foa_number");
 		header = header.replace("FULL_PROJECT_NUM", "nih_full_project_num");
@@ -269,8 +269,8 @@ public class NIH_Mapping extends Mapping{
 		header = header.replace("DIRECT_COST_AMT", "nih_direct_cost_amt");	
 		
 
-//		header = header.replace("Core Project Number", "local_id:ID");
-		header = header.replace("ClinicalTrials.gov ID", "local_id:ID");
+//		header = header.replace("Core Project Number", "local_id");
+		header = header.replace("ClinicalTrials.gov ID", "local_id");
 		header = header.replace("Study Status", "nih_study_status");
 		header = header.replace("Study", "title");
 		
@@ -287,7 +287,7 @@ public class NIH_Mapping extends Mapping{
 	
 //	research graph values
 	public void addResearchGraphValues(String[] orderedElements, HashMap<String, Integer> columnsWithIndexes, String local_id, String currentEntityType){
-		Integer columnIndex = columnsWithIndexes.get("key");
+		Integer columnIndex = columnsWithIndexes.get("key:ID");
 		if(columnIndex != null && columnIndex >= 0)
 			orderedElements[columnIndex] = "researchgraph.org/nih/" + local_id;
 		
@@ -299,9 +299,9 @@ public class NIH_Mapping extends Mapping{
 		if(columnIndex != null && columnIndex >= 0)
 			orderedElements[columnIndex] = this.currentDateAndTime;
 		
-		columnIndex = columnsWithIndexes.get("scopus_eid");
-		if(columnIndex != null && columnIndex >= 0)
-			orderedElements[columnIndex] = "\"\"";
+//		columnIndex = columnsWithIndexes.get("scopus_eid");
+//		if(columnIndex != null && columnIndex >= 0)
+//			orderedElements[columnIndex] = "\"\"";
 		
 		columnIndex = columnsWithIndexes.get("type");
 		if(columnIndex != null && columnIndex >= 0)
@@ -312,6 +312,22 @@ public class NIH_Mapping extends Mapping{
 		Integer columnIndex = columnsWithIndexes.get(":TYPE");
 		if(columnIndex != null && columnIndex >= 0)
 			orderedElements[columnIndex] = getLabel(EntityTypes.prjPubLink.toString());
+		
+		columnIndex = columnsWithIndexes.get("PMID");
+		if(columnIndex != null && columnIndex >= 0)
+			orderedElements[columnIndex] = "researchgraph.org/nih/" + orderedElements[columnIndex];
+
+		columnIndex = columnsWithIndexes.get("PROJECT_NUMBER");
+		if(columnIndex != null && columnIndex >= 0)
+			orderedElements[columnIndex] = "researchgraph.org/nih/" + orderedElements[columnIndex];
+		
+		columnIndex = columnsWithIndexes.get("Core Project Number");
+		if(columnIndex != null && columnIndex >= 0)
+			orderedElements[columnIndex] = "researchgraph.org/nih/" + orderedElements[columnIndex];
+
+		columnIndex = columnsWithIndexes.get("ClinicalTrials.gov ID");
+		if(columnIndex != null && columnIndex >= 0)
+			orderedElements[columnIndex] = "researchgraph.org/nih/" + orderedElements[columnIndex];
 	}
 	
 //	### labels ###

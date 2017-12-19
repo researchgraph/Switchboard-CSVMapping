@@ -11,10 +11,8 @@ import java.util.TimeZone;
 
 import org.apache.commons.io.FileUtils;
 
-import mappings.GESIS_Mapping;
 import mappings.Mapping;
 import mappings.MappingFactory;
-import mappings.NIH_Mapping.EntityTypes;
 import tools.Tools;
 
 public class Merge {
